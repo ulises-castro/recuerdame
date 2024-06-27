@@ -1,2 +1,2 @@
-export const LOCAL_RELOAD_SOCKET_PORT = 8050;
+export const LOCAL_RELOAD_SOCKET_PORT = 8060;
 export const LOCAL_RELOAD_SOCKET_URL = `ws://localhost:${LOCAL_RELOAD_SOCKET_PORT}`;
