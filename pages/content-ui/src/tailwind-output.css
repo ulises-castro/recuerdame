@@ -558,6 +558,10 @@ video {
   display: flex;
 }
 
+.table {
+  display: table;
+}
+
 .gap-1 {
   gap: 0.25rem;
 }

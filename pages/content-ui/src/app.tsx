@@ -1,23 +1,45 @@
 import { useEffect } from 'react';
-import Mark from 'mark.js'
+
+import '@src/style.css';
+
+const highlights = CSS.highlights
 
 export default function App() {
-  const markInstance = new Mark(document.querySelector("body"));
+
+  const handleSelectionChange = async () => {
+    const selection = window.getSelection();
+
+    console.log(selection)
+    if (selection && selection.rangeCount > 0) {
+      const range = selection?.getRangeAt(0)
+      console.log(range);
+      const commonAncestor = range.commonAncestorContainer;
+
+      if (commonAncestor.nodeType !== Node.ELEMENT_NODE) {
+        // commonAncestor = commonAncestor.parentElement;
+      }
+
+
+      const highlight = new Highlight(range)
+
+      highlights.set('copilot-highlight', highlight)
+
+      console.log('hi')
+
+      console.table(highlights.values().toArray())
+    }
+  }
 
   useEffect(() => {
     console.log('content ui loaded');
 
-    // FIXME: 
-    // instance.mark("Not", {
-    //   "element": "span",
-    //   "className": "highlight"
-    // });
+    document.addEventListener('mouseup', handleSelectionChange)
+    document.addEventListener('keyup', handleSelectionChange)
+    return () => {
+      document.removeEventListener('mouseup', handleSelectionChange)
+      document.removeEventListener('keyup', handleSelectionChange)
+    }
 
-    markInstance.unmark({
-      done: () => {
-        markInstance.mark("Not");
-      }
-    });
   }, []);
 
   return (
