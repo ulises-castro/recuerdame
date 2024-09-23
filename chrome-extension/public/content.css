@@ -1,1 +1,5 @@
-
+## FIXME: This is not working due to vite and chrome needs to inject the styles explicitly
+::highlight(recuerdito-highlight) {
+  background-color: yellow;
+  color: black;
+}
