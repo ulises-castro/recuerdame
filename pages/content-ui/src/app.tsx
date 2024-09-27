@@ -1,10 +1,24 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 import { useEffect } from 'react';
 
 import '@src/style.css';
-
+import { useUserStore } from './store';
 const highlights = CSS.highlights
 
-export default function App() {
+const AddHiglight = () => {
+  const { addHighlightedText, savedHighlights } = useUserStore.use;  // Access the state and actions
+  const totalSavedHighlight = savedHighlights()?.length
+  // FIXME: Bug here regardless to the hook usage
+  const createHighlightedText = () => addHighlightedText()
+
+  return (
+    <div>
+      <p>Count: {totalSavedHighlight}</p>
+      <button onClick={() => createHighlightedText()}>Add a random</button>
+      {/* <button onClick={() => setCount(10)}>Set to 10</button> */}
+    </div>
+  );
+};
 
 export default function App() {
   const handleSelectionChange = async () => {
@@ -15,15 +29,13 @@ export default function App() {
     if (selectedText) {
       const range = selection?.getRangeAt(0)
       console.log(range);
-      const commonAncestor = range.commonAncestorContainer;
+      // const commonAncestor = range.commonAncestorContainer;
 
       console.log(range)
       const highlight = new Highlight()
       highlight.add(range)
 
-      highlights.set('recuerdito-highlight', highlight)
-
-      // console.table(highlights.values().toArray())
+      highlights.set('recuerdame-highlight', highlight)
     }
   }
 
@@ -40,8 +52,10 @@ export default function App() {
   }, []);
 
   return (
-    <div className="flex gap-1 text-blue-500">
+    <div className="flex gap-1 text-blue-500 h-20">
+      <AddHiglight />
       Edit <strong>pages/content-ui/src/app.tsx</strong> and save to reload.
     </div>
   );
 }
+
