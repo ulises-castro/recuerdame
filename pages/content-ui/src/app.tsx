@@ -5,17 +5,15 @@ import '@src/style.css';
 import { useUserStore } from './store';
 const highlights = CSS.highlights
 
-const AddHiglight = () => {
+function AddHiglight({ url, range }: { url: string, range: Range }) {
   const { addHighlightedText, savedHighlights } = useUserStore.use;  // Access the state and actions
+  const createHighlightedText = addHighlightedText();
   const totalSavedHighlight = savedHighlights()?.length
-  // FIXME: Bug here regardless to the hook usage
-  const createHighlightedText = () => addHighlightedText()
 
   return (
     <div>
       <p>Count: {totalSavedHighlight}</p>
-      <button onClick={() => createHighlightedText()}>Add a random</button>
-      {/* <button onClick={() => setCount(10)}>Set to 10</button> */}
+      <button onClick={() => createHighlightedText(url, range)}>Add highlight</button>
     </div>
   );
 };
