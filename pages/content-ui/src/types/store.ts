@@ -1,5 +1,5 @@
 
-export type Comment = {
+export type CommentType = {
   uuid: string;
   content: string;
   createdAt: Date;
@@ -7,20 +7,19 @@ export type Comment = {
 }
 
 export type HighlightedText = {
-  uuid: string;
+  // uuid: string;
   range: Range;
-  comments: Comment[] | null;
+  // used uuid instead to avoid nested updating
+  comments: string[] | null;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type PageHighlight = {
-  uuid: string;
-  url: string;
-  highlights: HighlightedText[];
-}
+export type PageHighlight = Map<string, Map<string, HighlightedText>>
 
 export interface UserState {
-  savedHighlights: PageHighlight[] | null;
-  addHighlightedText: (url: string, range: Range) => void
+  // savedHighlights: null;
+  highlights: PageHighlight;
+  savePageHighlight: (url: string, range: Range) => void
+  // addHighlightedText: (url: string, range: Range) => void
 }

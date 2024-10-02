@@ -6,18 +6,16 @@ import { nanoid } from 'nanoid'
 
 import { PageHighlight, UserState } from '@src/types/store'
 
-const createPageHighlight = (url: string, range: Range): PageHighlight => {
-  return {
-    uuid: nanoid(),
-    url,
-    highlights: [{
-      uuid: nanoid(),
-      comments: null,
-      range,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }]
-  }
+const createPageHighlight = (range: Range) => {
+  const highlights = new Map()
+  highlights.set(nanoid(), {
+    comments: null,
+    range,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
+
+  return highlights
 }
 
 const extensionStorage: StateStorage = {
@@ -32,15 +30,29 @@ const extensionStorage: StateStorage = {
 }
 
 const userStoreBase = create<UserState>(persist(
-  (set) => ({
-    savedHighlights: null,
-    addHighlightedText: (url, range) =>
-      set((state) => {
-        const updatedHighlights = [...state.savedHighlights ?? []]
-        updatedHighlights.push(createPageHighlight(url, range))
+  (set, get) => ({
+    highlights: new Map() as PageHighlight,
+    savePageHighlight: (url: string, range: Range) => set((state) => {
+      const updatedHighlights = new Map(state.highlights)
+      const newHighlight = createPageHighlight(range)
+      const pageHighligts = new Map(updatedHighlights.get(url) ?? new Map([[nanoid(), newHighlight]]))
 
-        return { savedHighlights: updatedHighlights }
-      })
+      updatedHighlights.set(url, pageHighligts)
+
+
+      // if (pageHighligts) {
+      //   const updatedUrlMap = new Map(pageHighligts)
+      //   updatedUrlMap.set(nanoid(), newHighlight)
+      // } else {
+      //
+      //   // updatedHighlights.set(url, new Map([[nanoid(), newHighlight]]))
+      // }
+
+      // pageHighligts.set()
+
+
+      return { highlights: updatedHighlights }
+    })
   }),
   {
     name: 'highlighted-date-store',
