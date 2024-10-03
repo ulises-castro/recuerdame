@@ -1,3 +1,4 @@
+import { stringify, parse } from 'superjson'
 import { create } from 'zustand'
 import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
 import createSelectors from './createSelectors'
@@ -23,9 +24,16 @@ const extensionStorage: StateStorage = {
     new Promise((resolve) => {
       chrome.storage.local.get([name], (result) => {
         resolve(result[name])
+        if (!result[name]) return
+        resolve(parse(result[name]))
       })
     }),
   setItem: async (name, value) => chrome.storage.local.set({ [name]: value }),
+  setItem: async (name, value) => {
+    console.log(name, value)
+    const parsedValue = stringify(value)
+    await chrome.storage.local.set({ [name]: parsedValue },)
+  },
   removeItem: async (name) => chrome.storage.local.remove(name),
 }
 
