@@ -19,21 +19,22 @@ function AddHiglight({ url, range }: { url: string, range: Range }) {
 };
 
 export default function App() {
+  const { savePageHighlight, highlights } = useUserStore.use;  // Access the state and actions
+  const pageHighlights = highlights()
+  const saveHighlight = savePageHighlight()
+  const domain = window.location.origin;  // Returns the domain, e.g., "https://www.example.com"
+  const path = window.location.pathname;  // Returns the path, e.g., "/path/to/resource"
+  const pageUrl = domain + path;
   const handleSelectionChange = async () => {
     const selection = window.getSelection();
     const selectedText = selection?.toString().trim()
 
     console.log({ selection }, selectedText)
-    if (selectedText) {
+    if (selection && selectedText) {
       const range = selection?.getRangeAt(0)
       console.log(range);
       // const commonAncestor = range.commonAncestorContainer;
 
-      console.log(range)
-      const highlight = new Highlight()
-      highlight.add(range)
-
-      highlights.set('recuerdame-highlight', highlight)
     }
   }
 
@@ -49,9 +50,23 @@ export default function App() {
 
   }, []);
 
+  useEffect(() => {
+    if (!pageHighlights?.get(pageUrl)) return
+
+
+    console.log(pageHighlights.values())
+
+    const highlightsRanges = [pageHighlights.get(pageUrl).values()]
+
+
+    // const highlight = new Highlight(pageHighlights)
+    //
+    // CSS.highlights.set('recuerdame-highlight', highlight)
+  }, [pageHighlights])
+
   return (
     <div className="flex gap-1 text-blue-500 h-20">
-      <AddHiglight />
+      {/* <AddHiglight url={pageUrl} range={} /> */}
       Edit <strong>pages/content-ui/src/app.tsx</strong> and save to reload.
     </div>
   );
