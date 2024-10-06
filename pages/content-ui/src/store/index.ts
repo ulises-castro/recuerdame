@@ -1,34 +1,33 @@
 import { stringify, parse } from 'superjson'
 import { create } from 'zustand'
 import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
+import { persist, StateStorage } from 'zustand/middleware'
 import createSelectors from './createSelectors'
 
 import { nanoid } from 'nanoid'
 
-import { PageHighlight, UserState } from '@src/types/store'
+import { HighlightCommentsMapType, HighlightText, HighlightTextMapType, HighlightsMapType, UserState } from '@src/types/store'
 
-const createPageHighlight = (range: Range) => {
-  const highlights = new Map()
-  highlights.set(nanoid(), {
-    comments: null,
+const createPageHighlight = (range: Range): HighlightText => {
+  return {
     range,
     createdAt: new Date(),
-    updatedAt: new Date()
-  })
-
-  return highlights
+  }
 }
 
-const extensionStorage: StateStorage = {
+const initialState = {
+  highlightsMap: new Map() as HighlightsMapType,
+  highlightCommentsMap: new Map() as HighlightCommentsMapType
+}
+
+const storage: StateStorage = {
   getItem: async (name) =>
     new Promise((resolve) => {
       chrome.storage.local.get([name], (result) => {
-        resolve(result[name])
-        if (!result[name]) return
+        if (!result[name]) return resolve(null)
         resolve(parse(result[name]))
       })
     }),
-  setItem: async (name, value) => chrome.storage.local.set({ [name]: value }),
   setItem: async (name, value) => {
     console.log(name, value)
     const parsedValue = stringify(value)
@@ -39,12 +38,14 @@ const extensionStorage: StateStorage = {
 
 const userStoreBase = create<UserState>(persist(
   (set, get) => ({
-    highlights: new Map() as PageHighlight,
-    savePageHighlight: (url: string, range: Range) => set((state) => {
-      const updatedHighlights = new Map(state.highlights)
+    ...initialState,
+    savePageHighlight: (url: string, range: Range) => {
+      const highlightsMap = get().highlightsMap
+      const updatedHighlights = new Map(highlightsMap)
       const newHighlight = createPageHighlight(range)
-      const pageHighligts = new Map(updatedHighlights.get(url) ?? new Map([[nanoid(), newHighlight]]))
+      const pageHighligts = updatedHighlights.get(url) ?? new Map() as HighlightTextMapType
 
+      pageHighligts.set(nanoid(), newHighlight)
       updatedHighlights.set(url, pageHighligts)
 
 
@@ -56,15 +57,16 @@ const userStoreBase = create<UserState>(persist(
       //   // updatedHighlights.set(url, new Map([[nanoid(), newHighlight]]))
       // }
 
-      // pageHighligts.set()
 
 
-      return { highlights: updatedHighlights }
-    })
+      set((state) => ({
+        highlightsMap: updatedHighlights
+      }))
+    }
   }),
   {
     name: 'highlighted-date-store',
-    storage: createJSONStorage(() => extensionStorage)
+    storage
   }
 ))
 
