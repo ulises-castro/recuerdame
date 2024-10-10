@@ -4,35 +4,36 @@ import { useCallback, useEffect } from 'react';
 import '@src/style.css';
 import { useUserStore } from './store';
 
-import superjson from 'superjson';
+import { registerCustom, stringify } from 'superjson';
 
 // Function to get the path to a given node relative to the document root.
-function getNodePath(node) {
+function getNodePath(node: Node) {
   const path = [];
-  while (node) {
-    const index = Array.prototype.indexOf.call(node.parentNode?.childNodes || [], node);
+  let currentNode: Node | null = node
+  while (currentNode) {
+    const index = Array.prototype.indexOf.call(currentNode.parentNode?.childNodes || [], currentNode);
     if (index !== -1) {
       path.unshift(index);
     }
-    node = node.parentNode;
+    currentNode = currentNode.parentNode;
   }
   return path;
 }
 
 // Function to get a node from the document root using a path.
-function getNodeFromPath(path) {
+function getNodeFromPath(path: number[]) {
   let node = document;
   for (const index of path) {
-    node = node.childNodes[index];
+    (node as Node) = node.childNodes[index];
   }
   return node;
 }
 
 // Register custom serialization for Range.
-superjson.registerCustom(
+registerCustom(
   {
     isApplicable: (value) => value instanceof Range,
-    serialize: (range) => {
+    serialize: (range: Range) => {
       return {
         startPath: getNodePath(range.startContainer),
         startOffset: range.startOffset,
@@ -46,6 +47,9 @@ superjson.registerCustom(
       const range = document.createRange();
       range.setStart(startContainer, value.startOffset);
       range.setEnd(endContainer, value.endOffset);
+      if (range.collapsed) {
+        range.collapse()
+      }
       return range;
     },
   },
@@ -57,7 +61,7 @@ const range = document.createRange();
 range.setStart(document.body, 0);
 range.setEnd(document.body, 1);
 
-const serialized = superjson.stringify(range);
+const serialized = stringify(range);
 console.log(serialized);
 
 // const deserialized = superjson.parse(serialized);
@@ -96,6 +100,11 @@ export default function App() {
       console.log(range);
       // const commonAncestor = range.commonAncestorContainer;
 
+      console.log(pageUrl, range)
+      // const highlight = new Highlight()
+      // highlight.add(range)
+      //
+      // highlights.set('recuerdame-highlight', highlight)
       saveHighlight(pageUrl, range)
     }
   }, [pageUrl, saveHighlight])
@@ -126,7 +135,7 @@ export default function App() {
 
     const highlight = new Highlight(...ranges)
     CSS.highlights.set('recuerdame-highlight', highlight)
-  }, [_pageHighlights])
+  }, [_pageHighlights, pageUrl])
 
   return (
     <div className="flex gap-1 text-blue-500 h-20">
