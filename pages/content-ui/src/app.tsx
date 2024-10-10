@@ -5,6 +5,7 @@ import '@src/style.css';
 import { useUserStore } from './store';
 
 import { registerCustom, stringify } from 'superjson';
+import HighlightToobar from './HighlightToobar';
 
 // Function to get the path to a given node relative to the document root.
 function getNodePath(node: Node) {
@@ -141,6 +142,7 @@ export default function App() {
     <div className="flex gap-1 text-blue-500 h-20">
       {/* <AddHiglight url={pageUrl} range={} /> */}
       Edit <strong>pages/content-ui/src/app.tsx</strong> and save to reload.
+      <HighlightToobar />
     </div>
   );
 }
