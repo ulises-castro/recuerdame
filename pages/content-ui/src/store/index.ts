@@ -1,6 +1,5 @@
 import { stringify, parse } from 'superjson'
 import { create } from 'zustand'
-import { createJSONStorage, persist, StateStorage } from 'zustand/middleware'
 import { persist, StateStorage } from 'zustand/middleware'
 import createSelectors from './createSelectors'
 
@@ -56,8 +55,6 @@ const userStoreBase = create<UserState>(persist(
       //
       //   // updatedHighlights.set(url, new Map([[nanoid(), newHighlight]]))
       // }
-
-
 
       set((state) => ({
         highlightsMap: updatedHighlights
