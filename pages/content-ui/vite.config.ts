@@ -7,6 +7,8 @@ import * as child_process from 'child_process';
 const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
 
+const srcReDir = resolve(rootDir, './src');
+
 const isDev = process.env.__DEV__ === 'true';
 const isProduction = !isDev;
 
@@ -18,6 +20,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@src': srcDir,
+      '@': srcReDir,
     },
   },
   base: '',
