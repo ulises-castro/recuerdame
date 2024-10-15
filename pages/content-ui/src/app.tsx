@@ -6,6 +6,7 @@ import { useUserStore } from './store';
 
 import { registerCustom, stringify } from 'superjson';
 import HighlightToobar from './HighlightToobar';
+import HighlightToobar from './components/HighlightToobar';
 
 // Function to get the path to a given node relative to the document root.
 function getNodePath(node: Node) {

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+    #shadow-root {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -91,10 +91,10 @@
 }
 
 @layer base {
-  * {
+    #shadow-root * {
     @apply border-border;
   }
-  body {
+   #shadow-root {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
