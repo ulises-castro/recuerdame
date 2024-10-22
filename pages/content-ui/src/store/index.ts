@@ -1,4 +1,5 @@
 import { stringify, parse } from 'superjson'
+import './superjsonConfig'
 import { create } from 'zustand'
 import { persist, StateStorage } from 'zustand/middleware'
 import createSelectors from './createSelectors'
