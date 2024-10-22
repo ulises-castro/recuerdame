@@ -2,6 +2,7 @@ import '@src/style.css';
 
 import HighlighterController from './components/highlight/HighlighterController';
 import HighlightToobar from './components/HighlightToobar';
+import MarkdownPreview from './components/editor/MarkdownPreview';
 
 
 // function AddHiglight({ url, range }: { url: string, range: Range }) {
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <div className="flex gap-1 text-blue-500 h-20">
       <HighlighterController />
+      <MarkdownPreview />
       <HighlightToobar />
     </div>
   );

@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from 'react'
 import { Slate, Editable, withReact } from 'slate-react'
 import { Text, createEditor, Descendant } from 'slate'
 import { withHistory } from 'slate-history'
-import { css } from '@emotion/css'
+import { cn } from '@chrome-extension-boilerplate/shared'
 
 export default function MarkdownPreview() {
   const renderLeaf = useCallback(props => <Leaf {...props} />, [])
@@ -62,44 +62,50 @@ const Leaf = ({ attributes, children, leaf }) => {
   return (
     <span
       {...attributes}
-      className={css`
-        font-weight: ${leaf.bold && 'bold'};
-        font-style: ${leaf.italic && 'italic'};
-        text-decoration: ${leaf.underlined && 'underline'};
-        ${leaf.title &&
-        css`
-          display: inline-block;
-          font-weight: bold;
-          font-size: 20px;
-          margin: 20px 0 10px 0;
-        `}
-        ${leaf.list &&
-        css`
-          padding-left: 10px;
-          font-size: 20px;
-          line-height: 10px;
-        `}
-        ${leaf.hr &&
-        css`
-          display: block;
-          text-align: center;
-          border-bottom: 2px solid #ddd;
-        `}
-        ${leaf.blockquote &&
-        css`
-          display: inline-block;
-          border-left: 2px solid #ddd;
-          padding-left: 10px;
-          color: #aaa;
-          font-style: italic;
-        `}
-        ${leaf.code &&
-        css`
-          font-family: monospace;
-          background-color: #eee;
-          padding: 3px;
-        `}
-      `}
+      className={cn({
+        'font-bold': leaf.bold,
+        'italic': leaf.italic,
+        'inline-block font-bold mx-5 my-2 text-2xl': leaf.title,
+        'underline': leaf.underline
+      })}
+    // className={css`
+    //   font-weight: ${leaf.bold && 'bold'};
+    //   font-style: ${leaf.italic && 'italic'};
+    //   text-decoration: ${leaf.underlined && 'underline'};
+    //   ${leaf.title &&
+    //   css`
+    //     display: inline-block;
+    //     font-weight: bold;
+    //     font-size: 20px;
+    //     margin: 20px 0 10px 0;
+    //   `}
+    //   ${leaf.list &&
+    //   css`
+    //     padding-left: 10px;
+    //     font-size: 20px;
+    //     line-height: 10px;
+    //   `}
+    //   ${leaf.hr &&
+    //   css`
+    //     display: block;
+    //     text-align: center;
+    //     border-bottom: 2px solid #ddd;
+    //   `}
+    //   ${leaf.blockquote &&
+    //   css`
+    //     display: inline-block;
+    //     border-left: 2px solid #ddd;
+    //     padding-left: 10px;
+    //     color: #aaa;
+    //     font-style: italic;
+    //   `}
+    //   ${leaf.code &&
+    //   css`
+    //     font-family: monospace;
+    //     background-color: #eee;
+    //     padding: 3px;
+    //   `}
+    // `}
     >
       {children}
     </span>
@@ -117,7 +123,7 @@ const initialValue: Descendant[] = [
   },
   {
     type: 'paragraph',
-    children: [{ text: '## Try it out!' }],
+    children: [{ text: '## Testing!' }],
   },
   {
     type: 'paragraph',
