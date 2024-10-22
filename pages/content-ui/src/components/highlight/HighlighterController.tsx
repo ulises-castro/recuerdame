@@ -14,7 +14,7 @@ export default function HighlighterController() {
   const pageUrl = domain + path;
 
   const handleSelectionChange = useCallback(async (event: MouseEvent | KeyboardEvent) => {
-    if (event.target?.id === EXTENSION_VIEW_ROOT_ID) return
+    if ((event.target as HTMLElement)?.id === EXTENSION_VIEW_ROOT_ID) return
 
     const selection = window.getSelection();
     const selectedText = selection?.toString().trim()
@@ -30,8 +30,6 @@ export default function HighlighterController() {
   }, [pageUrl, saveHighlight])
 
   useEffect(() => {
-    console.log('content ui loaded');
-
     document.addEventListener('mouseup', handleSelectionChange)
     document.addEventListener('keyup', handleSelectionChange)
     return () => {
